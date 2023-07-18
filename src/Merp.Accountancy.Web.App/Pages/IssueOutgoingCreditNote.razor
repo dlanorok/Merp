@@ -1,0 +1,23 @@
+﻿@page "/accountancy/creditnote/issue"
+
+@inject UrlBuilder UrlBuilder 
+@inject IStringLocalizer<Resources.Pages.IssueOutgoingCreditNote> localizer
+
+<PageTitle>@localizer[nameof(Resources.Pages.IssueOutgoingCreditNote.PageTitle)]</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/_content/Merp.Accountancy.Web.App/lib/font-awesome/css/all.min.css" />
+</HeadContent>
+
+<MudToolBar>
+    <MudText Typo="Typo.h5">@localizer[nameof(Resources.Pages.IssueOutgoingCreditNote.PageHeaderText)]</MudText>
+    <MudSpacer />
+    <MudButton Href="@UrlBuilder.BuildSearchInvoicesUrl()" Variant="Variant.Outlined" EndIcon="fas fa-caret-right" Color="Color.Primary">
+        @localizer[nameof(Resources.Pages.IssueOutgoingCreditNote.BackButtonText)]
+    </MudButton>
+</MudToolBar>
+<MudDivider />
+
+<IssueInvoiceForm Model="model"
+                  OnIssueInvoice="IssueOutgoingCreditNoteAsync"
+                  OnSaveDraft="SaveOutgoingCreditNoteDraftAsync"
+                  OnCancel="Cancel" />

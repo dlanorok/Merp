@@ -1,0 +1,23 @@
+﻿@page "/accountancy/creditnote/register"
+
+@inject UrlBuilder UrlBuilder 
+@inject IStringLocalizer<Resources.Pages.RegisterIncomingCreditNote> localizer
+
+<PageTitle>@localizer[nameof(Resources.Pages.RegisterIncomingCreditNote.PageTitle)]</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/_content/Merp.Accountancy.Web.App/lib/font-awesome/css/all.min.css" />
+</HeadContent>
+
+<MudToolBar>
+    <MudText Typo="Typo.h5">@localizer[nameof(Resources.Pages.RegisterIncomingCreditNote.PageHeaderText)]</MudText>
+    <MudSpacer />
+    <MudButton Href="@UrlBuilder.BuildSearchInvoicesUrl()" Variant="Variant.Outlined" EndIcon="fas fa-caret-right" Color="Color.Primary">
+        @localizer[nameof(Resources.Pages.RegisterIncomingCreditNote.BackButtonText)]
+    </MudButton>
+</MudToolBar>
+<MudDivider />
+
+<RegisterIncomingInvoiceForm Model="model"
+                             OnRegisterIncomingInvoice="RegisterIncomingCreditNoteAsync"
+                             OnCancel="Cancel"
+                             HideDueDate="true"/>

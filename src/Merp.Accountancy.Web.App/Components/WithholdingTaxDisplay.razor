@@ -1,0 +1,35 @@
+﻿@inject IStringLocalizer<Resources.Components.WithholdingTaxDisplay> localizer
+
+<fieldset>
+    <legend>@localizer[nameof(Resources.Components.WithholdingTaxDisplay.WithholdingTaxSectionTitle)]</legend>
+
+    <MudGrid>
+        <MudItem xs="6" md="6">
+            <MudText>@localizer[nameof(Resources.Components.WithholdingTaxDisplay.WithholdingTaxDescriptionLabel)]</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@localizer[nameof(Resources.Components.WithholdingTaxDisplay.WithholdingTaxRateLabel)]</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@localizer[nameof(Resources.Components.WithholdingTaxDisplay.WithholdingTaxTaxableAmountRateLabel)]</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@localizer[nameof(Resources.Components.WithholdingTaxDisplay.WithholdingTaxAmountLabel)]</MudText>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid>
+        <MudItem xs="6" md="6">
+            <MudText>@WithholdingTax.Description</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@WithholdingTax.Rate %</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@WithholdingTax.TaxableAmountRate %</MudText>
+        </MudItem>
+        <MudItem xs="2" md="2">
+            <MudText>@Currency @WithholdingTax.Amount.ToString("N2")</MudText>
+        </MudItem>
+    </MudGrid>
+</fieldset>

@@ -1,0 +1,36 @@
+﻿<fieldset>
+    <div class="row">
+        <label>
+            Address
+            <InputText class="form-control" @bind-Value="Address.Address" @bind-disabled="@IsDisabled" />
+        </label>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label>
+                City
+                <InputText class="form-control" @bind-Value="Address.City" @bind-disabled="@IsDisabled" />
+            </label>
+        </div>
+        <div class="col-6">
+            <label>
+                Postal Code
+                <InputText class="form-control" @bind-Value="Address.PostalCode" @bind-disabled="@IsDisabled" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label>
+                Province
+                <InputText class="form-control" @bind-Value="Address.Province" @bind-disabled="@IsDisabled" />
+            </label>
+        </div>
+        <div class="col-6">
+            <label>
+                Country
+                <InputText class="form-control" @bind-Value="Address.Country" @bind-disabled="@IsDisabled" />
+            </label>
+        </div>
+    </div>
+</fieldset>

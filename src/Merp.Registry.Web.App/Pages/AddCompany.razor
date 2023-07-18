@@ -1,0 +1,93 @@
+﻿@page "/registry/company/add"
+
+<div class="row align-items-center">
+    <div class="col">
+        <h2>
+            <i class="fa fa-building"></i> Register a company
+        </h2>
+    </div>
+    <div class="col">
+        <NavLink class="btn btn-outline-secondary float-end" href="/registry/">
+            <i class="fa fa-angle-left"></i> Search
+        </NavLink>
+    </div>
+</div>
+<hr />
+
+<hr />
+<EditForm Model="@ViewModel" OnValidSubmit="@Submit" class="row">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <TabControl>
+        <TabPage Text="General">
+            <div class="row">
+                <div class="col-12">
+                    <label class="col-form-label" for="companyName">Company name</label>
+                    <InputText @bind-Value="ViewModel.CompanyName" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label for="companyName">SSN</label>
+                    <InputText @bind-Value="ViewModel.NationalIdentificationNumber" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label for="vatNumber">VAT Number</label>
+                    <VatNumber Type="VatNumber.PartyType.Company" Value="@ViewModel.VatNumber" OnLookup="@VatNumberLookup" />
+                </div>
+            </div>
+        </TabPage>
+        <TabPage Text="LegalAddress">
+            <PostalAddressEditor Address="@ViewModel.LegalAddress" />
+        </TabPage>
+        <TabPage Text="Billing address">
+            <label>
+                <InputCheckbox @bind-Value="@ViewModel.UseLegalAddressAsBillingAddress" />
+                Use legal address as Billing address
+            </label>
+            <PostalAddressEditor Address="@ViewModel.BillingAddress" IsDisabled="@ViewModel.UseLegalAddressAsBillingAddress" />
+        </TabPage>
+        <TabPage Text="Shipping address">
+            <label>
+                <InputCheckbox @bind-Value="@ViewModel.UseLegalAddressAsShippingAddress" />
+                Use legal address as Shipping address
+            </label>
+            <PostalAddressEditor Address="@ViewModel.ShippingAddress" IsDisabled="@ViewModel.UseLegalAddressAsShippingAddress" />
+        </TabPage>
+        <TabPage Text="Contact info">
+            <div class="row">
+                <div class="col-6">
+                    <label for="phoneNumber">
+                        Phone number
+                        <InputText class="form-control" @bind-Value="@ViewModel.PhoneNumber" />
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="faxNumber">
+                        Fax Number
+                        <InputText class="form-control" @bind-Value="@ViewModel.FaxNumber" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="websiteAddress">
+                        Web site address:
+                        <InputText class="form-control" @bind-Value="@ViewModel.WebSiteUrl" />
+                    </label>
+                </div>
+                <div class="col-6">
+                    <label for="emailAddress">
+                        e-mail address:
+                        <InputText class="form-control" type="email" @bind-Value="@ViewModel.EmailAddress" />
+                    </label>
+                </div>
+            </div>
+        </TabPage>
+    </TabControl>
+    <div class="row">
+        <div class="btn-group float-end" role="group">
+            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="button" class="btn btn-outline-secondary">Cancel</button>
+        </div>
+    </div>
+</EditForm>

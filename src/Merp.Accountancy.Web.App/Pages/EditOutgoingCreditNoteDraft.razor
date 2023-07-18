@@ -1,0 +1,31 @@
+﻿@page "/accountancy/draft/creditnote/edit/{id:guid}"
+
+@inject UrlBuilder UrlBuilder
+@inject IStringLocalizer<Resources.Pages.EditOutgoingCreditNoteDraft> localizer
+
+<PageTitle>@localizer[nameof(Resources.Pages.EditOutgoingCreditNoteDraft.PageTitle)]</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/_content/Merp.Accountancy.Web.App/lib/font-awesome/css/all.min.css" />
+</HeadContent>
+
+<MudToolBar>
+    <MudText Typo="Typo.h5">@localizer[nameof(Resources.Pages.EditOutgoingCreditNoteDraft.PageHeaderText)]</MudText>
+    <MudSpacer />
+    <MudButton Href="@UrlBuilder.BuildSearchDraftsUrl()" Variant="Variant.Outlined" EndIcon="fas fa-caret-right" Color="Color.Primary">
+        @localizer[nameof(Resources.Pages.EditOutgoingCreditNoteDraft.BackButtonText)]
+    </MudButton>
+</MudToolBar>
+<MudDivider />
+
+@if (model is null)
+{
+    <MudAlert Severity="Severity.Error">
+        <MudText>@localizer[nameof(Resources.Pages.EditOutgoingCreditNoteDraft.DraftNotFoundMessageText)]. <MudLink Href="@UrlBuilder.BuildSearchDraftsUrl()">@localizer[nameof(Resources.Pages.EditOutgoingCreditNoteDraft.SearchAnotherDraftMessageText)]</MudLink></MudText>
+    </MudAlert>
+}
+else
+{
+    <IssueInvoiceForm Model="model"
+                      OnSaveDraft="EditDraftAsync"
+                      OnIssueInvoice="IssueOutgoingCreditNoteFromDraftAsync" />
+}

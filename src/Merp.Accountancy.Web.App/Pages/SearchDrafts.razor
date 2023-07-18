@@ -1,0 +1,111 @@
+﻿@page "/accountancy/draft/search"
+
+@inject UrlBuilder UrlBuilder
+@inject IStringLocalizer<Resources.Pages.SearchDrafts> localizer
+
+<PageTitle>@localizer[nameof(Resources.Pages.SearchDrafts.PageTitle)]</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/_content/Merp.Accountancy.Web.App/lib/font-awesome/css/all.min.css" />
+</HeadContent>
+
+<MudToolBar>
+    <MudText Typo="Typo.h5">@localizer[nameof(Resources.Pages.SearchDrafts.PageHeaderText)]</MudText>
+    <MudSpacer />
+    <MudButton Href="@UrlBuilder.BuildSearchInvoicesUrl()" Variant="Variant.Outlined" EndIcon="fas fa-caret-right" Color="Color.Primary">
+        @localizer[nameof(Resources.Pages.SearchDrafts.BackButtonText)]
+    </MudButton>
+</MudToolBar>
+<MudDivider />
+
+<MudPaper Class="mt-4 mb-2 pb-2 px-4">
+    <EditForm Model="parameters" OnValidSubmit="SearchDraftsAsync">
+        <DataAnnotationsValidator />
+
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@localizer[nameof(Resources.Pages.SearchDrafts.DraftKindSearchLabel)]" @bind-Value="parameters.Kind" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    @foreach (var kind in Enum.GetValues<DraftKind>())
+                    {
+                        <MudSelectItem Value="kind">@localizer[$"{nameof(DraftKind)}{kind}"]</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@localizer[nameof(Resources.Pages.SearchDrafts.CustomerSearchLabel)]" @bind-Value="parameters.CustomerId" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem T="Guid?" Value="null">@localizer[nameof(Resources.Pages.SearchDrafts.AllCustomersOptionValue)]</MudSelectItem>
+                    @foreach (var customer in parameters.DraftCustomers)
+                    {
+                        <MudSelectItem T="Guid?" Value="@customer.Id">@customer.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudDatePicker Label="@localizer[nameof(Resources.Pages.SearchDrafts.DateFromSearchLabel)]"
+                               @bind-Date="parameters.DateFrom"
+                               Variant="Variant.Outlined"
+                               Margin="Margin.Dense"
+                               Editable="true"
+                               AutoClose="true" />
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudDatePicker Label="@localizer[nameof(Resources.Pages.SearchDrafts.DateToSearchLabel)]"
+                               @bind-Date="parameters.DateTo"
+                               Variant="Variant.Outlined"
+                               Margin="Margin.Dense"
+                               Editable="true"
+                               AutoClose="true" />
+            </MudItem>
+            <MudItem xs="12" md="4" class="d-flex align-center">
+                <MudButton class="mr-4" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="fas fa-search" Color="Color.Primary">@localizer[nameof(Resources.Pages.SearchDrafts.SearchButtonText)]</MudButton>
+                <MudButton OnClick="ClearSearchParametersAsync" Variant="Variant.Outlined" StartIcon="fas fa-times" Color="Color.Primary">@localizer[nameof(Resources.Pages.SearchDrafts.ClearButtonText)]</MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</MudPaper>
+<MudDivider />
+
+<MudTable Items="model.Drafts" Striped="true" RowsPerPage="parameters.PageSize">
+    <HeaderContent>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchDrafts.DocumentTypeColumn)]</MudTh>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchDrafts.DateColumn)]</MudTh>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchDrafts.CustomerColumn)]</MudTh>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchDrafts.PriceColumn)]</MudTh>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchDrafts.DescriptionColumn)]</MudTh>
+        <MudTh>&nbsp;</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="draft">
+        <MudTd>@localizer[$"{nameof(DraftKind)}{draft.DocumentType}"]</MudTd>
+        <MudTd>@(draft.Date?.ToShortDateString() ?? "-")</MudTd>
+        <MudTd>@draft.CustomerName</MudTd>
+        <MudTd>@draft.Currency @draft.TotalPrice.ToString("N2")</MudTd>
+        <MudTd>@draft.Description</MudTd>
+        <MudTd Class="d-flex align-content-end">
+            <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                <MudButton Href="@BuildDraftEditUrl(draft)" StartIcon="fas fa-edit">@localizer[nameof(Resources.Pages.SearchDrafts.EditButtonText)]</MudButton>
+                <MudButton OnClick="@(() => DeleteDraftAsync(draft))" StartIcon="fas fa-trash" IconColor="Color.Error">@localizer[nameof(Resources.Pages.SearchDrafts.DeleteButtonText)]</MudButton>
+            </MudButtonGroup>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>
+            @localizer[nameof(Resources.Pages.SearchDrafts.NoDraftsFoundText)]
+        </MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        @if (model.Drafts.Any() && numberOfPages > 1)
+        {
+            <div class="px-4 mt-4 mb-2 pb-2 d-flex align-center flex-row-reverse">
+                <MudPagination Count="numberOfPages"
+                               Variant="Variant.Filled"
+                               Rectangular="true"
+                               ShowFirstButton="true"
+                               ShowLastButton="true"
+                               SelectedChanged="OnPageChanged"/>
+                <span class="mr-2">@localizer[nameof(Resources.Pages.SearchDrafts.PaginationItemsNumberText), model.Drafts.Count(), model.TotalNumberOfDrafts]</span>
+            </div>
+        }
+    </PagerContent>
+</MudTable>

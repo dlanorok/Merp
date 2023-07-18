@@ -1,0 +1,79 @@
+﻿@page "/accountancy/joborder/search"
+
+@inject UrlBuilder UrlBuilder
+@inject IStringLocalizer<Resources.Pages.SearchJobOrders> localizer
+
+<PageTitle>@localizer[nameof(Resources.Pages.SearchJobOrders.PageTitle)]</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/_content/Merp.Accountancy.Web.App/lib/font-awesome/css/all.min.css" />
+</HeadContent>
+
+<MudText Typo="Typo.h5">@localizer[nameof(Resources.Pages.SearchJobOrders.PageHeaderText)]</MudText>
+<MudDivider />
+
+<MudPaper Class="mt-4 mb-2 pb-2 px-4">
+    <EditForm Model="@parameters" OnValidSubmit="Search">
+        <DataAnnotationsValidator />
+
+        <MudGrid>
+            <MudItem md="5" xs="12">
+                <MudSelect Label="@localizer[nameof(Resources.Pages.SearchJobOrders.CustomerSelectLabel)]" @bind-Value="parameters.CustomerId" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem T="Guid?" Value="null">@localizer[nameof(Resources.Pages.SearchJobOrders.AllCustomerOptionLabel)]</MudSelectItem>
+                    @foreach (var customer in parameters.Customers)
+                    {
+                        <MudSelectItem Value="@customer.Id">@customer.CustomerName</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem md="5" xs="12">
+                <MudTextField Label="@localizer[nameof(Resources.Pages.SearchJobOrders.NameTextLabel)]"
+                              @bind-Value="parameters.Name"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"/>
+            </MudItem>
+            <MudItem md="2" xs="12">
+                <MudCheckBox Label="@localizer[nameof(Resources.Pages.SearchJobOrders.CurrentOnlyCheckboxLabel)]"
+                             @bind-Checked="parameters.CurrentOnly" />
+            </MudItem>
+        </MudGrid>
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="fas fa-search" Color="Color.Primary">@localizer[nameof(Resources.Pages.SearchJobOrders.SearchButtonText)]</MudButton>
+            <MudButton Href="@UrlBuilder.BuildCreateJobOrderUrl()" Variant="Variant.Outlined" StartIcon="fas fa-plus" Color="Color.Primary">@localizer[nameof(Resources.Pages.SearchJobOrders.CreateJobOrderButtonText)]</MudButton>
+        </div>
+    </EditForm>
+</MudPaper>
+<MudDivider />
+
+<MudTable Items="model.JobOrders" Striped="true" RowsPerPage="@parameters.PageSize">
+    <HeaderContent>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchJobOrders.CustomerNameColumn)]</MudTh>
+        <MudTh>@localizer[nameof(Resources.Pages.SearchJobOrders.JobOrderNameColumn)]</MudTh>
+        <MudTh>&nbsp;</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.CustomerName</MudTd>
+        <MudTd>@context.Name</MudTd>
+        <MudTd>
+            <MudButton Color="Color.Primary" StartIcon="fas fa-eye" Href="@UrlBuilder.BuildJobOrderDetailUrl(context.Id)">@localizer[nameof(Resources.Pages.SearchJobOrders.DetailsButtonText)]</MudButton>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>
+            @localizer[nameof(Resources.Pages.SearchJobOrders.NoJobOrdersFoundText)]
+        </MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        @if (model.JobOrders.Any())
+        {
+            <div class=" px-4 mt-4 mb-2 d-flex align-center flex-row-reverse">
+                <MudPagination Count="numberOfPages"
+                               Variant="Variant.Filled"
+                               Rectangular="true"
+                               ShowFirstButton="true"
+                               ShowLastButton="true"
+                               SelectedChanged="OnPageChanged" />
+                <span class="mr-2">@localizer[nameof(Resources.Pages.SearchJobOrders.PaginationItemsNumberText), model.JobOrders.Count(), model.TotalNumberOfJobOrders]</span>
+            </div>
+        }
+    </PagerContent>
+</MudTable>
